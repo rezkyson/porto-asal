@@ -55,9 +55,7 @@ const experiences = config.experience
               </p>
            </div>
         </div>
-
       </div>
-
     </div>
   </section>
 </template>

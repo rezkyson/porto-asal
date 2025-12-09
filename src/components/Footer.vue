@@ -20,7 +20,7 @@ import { config } from '../data/config.js'
                </svg>
             </a>
          </div>
-
+         
          <!-- Circular Badge (Optional decoration) -->
          <div class="hidden lg:flex w-40 h-40 rounded-full border border-white/10 items-center justify-center animate-[spin_10s_linear_infinite]">
             <svg viewBox="0 0 100 100" width="140" height="140">

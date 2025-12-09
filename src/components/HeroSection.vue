@@ -1,6 +1,6 @@
 <script setup>
 import { ref, onMounted } from 'vue'
-import { config } from '../data/config.js'
+import { config } from '../data/config'
 
 // --- Hacker Decode Effect for Name ---
 const nameText = ref(config.personal.name)
