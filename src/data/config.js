@@ -6,7 +6,7 @@ export const config = {
         profileImage: "/profile.jpg",
         about: "I craft high-performance websites and applications with a focus on details, motion, and user experience. Specializing in the logic behind the interface and the magic in the interaction.",
         email: "REZNODE12@GMAIL.COM",
-        github: "https://github.com/",
+        github: "https://github.com/rezkyson",
         linkedin: "https://linkedin.com/",
         footer: "© 2024 REZKY — Crafted with Vue & Tailwind"
     },
@@ -18,7 +18,11 @@ export const config = {
         { name: "Tailwind CSS", icon: "tailwindcss" },
         { name: "Git", icon: "git" },
         { name: "GitHub", icon: "github" },
-        { name: "PostgreSQL", icon: "postgresql" }
+        { name: "PostgreSQL", icon: "postgresql" },
+        { name: "Python", icon: "python" },
+        { name: "Laravel", icon: "laravel" },
+        { name: "MySQL", icon: "mysql" },
+        { name: "React", icon: "react" }
     ],
     projects: [
         {
