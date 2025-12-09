@@ -5,6 +5,8 @@ import SkillsMarquee from './components/SkillsMarquee.vue'
 import ProjectsSection from './components/ProjectsSection.vue'
 import Footer from './components/Footer.vue'
 import InteractiveBackground from './components/InteractiveBackground.vue'
+import ContactSection from './components/ContactSection.vue'
+import ExperienceSection from './components/ExperienceSection.vue'
 </script>
 
 <template>
@@ -18,6 +20,7 @@ import InteractiveBackground from './components/InteractiveBackground.vue'
     <main>
       <HeroSection />
       <SkillsMarquee />
+      <ExperienceSection />
       <ProjectsSection />
       <ContactSection />
     </main>

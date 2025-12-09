@@ -110,6 +110,15 @@ onMounted(() => {
          {{ config.personal.about }}
        </p>
 
+       <!-- Quote Section -->
+       <div class="mt-4 relative overflow-hidden group">
+          <p class="text-lg md:text-xl font-mono text-center relative z-10 px-6 py-2">
+            <span class="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-blue-400 to-purple-400 animate-gradient-x font-bold italic">
+              "{{ config.personal.quote }}"
+            </span>
+          </p>
+       </div>
+
        <!-- Spaced Out Buttons -->
        <div class="flex flex-col sm:flex-row gap-6 pt-8 w-full justify-center">
           <a href="#projects" class="px-10 py-4 rounded-2xl bg-white text-black font-bold text-lg hover:scale-105 transition-transform shadow-xl shadow-white/5">

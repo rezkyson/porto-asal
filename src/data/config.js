@@ -8,8 +8,25 @@ export const config = {
         email: "REZNODE12@GMAIL.COM",
         github: "https://github.com/rezkyson",
         linkedin: "https://linkedin.com/",
-        footer: "© 2024 REZKY — Crafted with Vue & Tailwind"
+        footer: "© 2024 REZKY — Crafted with Vue & Tailwind",
+        quote: "ingin menjadi programmer handal namun enggan ngoding"
     },
+    experience: [
+        {
+            title: "Freelance Developer",
+            company: "Self-Employed",
+            period: "Present",
+            description: "Developing modern web applications and delivering digital solutions for various clients.",
+            type: "work"
+        },
+        {
+            title: "Bachelor of Computer Science",
+            company: "STMIK ADHI GUNA PALU",
+            period: "Graduated",
+            description: "Focused on Software Engineering and Information Systems.",
+            type: "education"
+        }
+    ],
     skills: [
         { name: "Go (Golang)", icon: "go" },
         { name: "Vite", icon: "vitejs" },
