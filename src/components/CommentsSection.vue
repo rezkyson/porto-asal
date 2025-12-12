@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted, computed } from 'vue'
+import { ref, onMounted } from 'vue'
 import { supabase } from '../lib/supabase'
 
 const comments = ref([])
@@ -84,8 +84,6 @@ const submitComment = async () => {
         successMessage.value = 'Message sent successfully! ✨'
         setTimeout(() => successMessage.value = '', 3000)
         await fetchComments()
-        // Reset to first page to show new comment
-        displayCount.value = commentsPerPage
     } catch (err) {
         console.error('Error submitting:', err)
         error.value = 'Failed to send. Please try again later.'
@@ -120,39 +118,10 @@ const formatDate = (dateString) => {
     if (diffMins < 60) return `${diffMins}m ago`
     if (diffHours < 24) return `${diffHours}h ago`
     if (diffDays < 7) return `${diffDays}d ago`
-
+    
     return date.toLocaleDateString('en-US', {
         month: 'short', day: 'numeric', year: 'numeric'
     })
-}
-
-// Pagination & View Mode
-const commentsPerPage = 5
-const displayCount = ref(commentsPerPage)
-const isCompactView = ref(false)
-
-const displayedComments = computed(() => {
-    return comments.value.slice(0, displayCount.value)
-})
-
-const hasMoreComments = computed(() => {
-    return displayCount.value < comments.value.length
-})
-
-const remainingCount = computed(() => {
-    return comments.value.length - displayCount.value
-})
-
-const showMore = () => {
-    displayCount.value = Math.min(displayCount.value + commentsPerPage, comments.value.length)
-}
-
-const showAll = () => {
-    displayCount.value = comments.value.length
-}
-
-const collapse = () => {
-    displayCount.value = commentsPerPage
 }
 </script>
 
@@ -174,8 +143,7 @@ const collapse = () => {
                 </div>
                 <h3 class="text-3xl sm:text-4xl md:text-5xl font-bold font-display text-white mb-4" v-motion
                     :initial="{ opacity: 0, y: 20 }" :visible="{ opacity: 1, y: 0, transition: { delay: 100 } }">
-                    Leave Your <span
-                        class="bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">Mark</span>
+                    Leave Your <span class="bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">Mark</span>
                 </h3>
                 <p class="text-slate-400 max-w-md mx-auto text-sm md:text-base" v-motion
                     :initial="{ opacity: 0, y: 20 }" :visible="{ opacity: 1, y: 0, transition: { delay: 150 } }">
@@ -191,19 +159,14 @@ const collapse = () => {
                         <div class="bg-gradient-to-br from-slate-900/80 to-slate-800/80 backdrop-blur-2xl border border-white/10 rounded-3xl p-6 md:p-8 shadow-2xl relative overflow-hidden group"
                             v-motion :initial="{ opacity: 0, x: -30 }"
                             :visible="{ opacity: 1, x: 0, transition: { delay: 200 } }">
-
+                            
                             <!-- Decorative gradient border -->
-                            <div
-                                class="absolute inset-0 rounded-3xl bg-gradient-to-br from-purple-500/20 via-transparent to-pink-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500 -z-10">
-                            </div>
-
+                            <div class="absolute inset-0 rounded-3xl bg-gradient-to-br from-purple-500/20 via-transparent to-pink-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500 -z-10"></div>
+                            
                             <div class="flex items-center gap-3 mb-6">
-                                <div
-                                    class="w-10 h-10 rounded-xl bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-white" fill="none"
-                                        viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                                <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
                                     </svg>
                                 </div>
                                 <h4 class="text-xl font-bold text-white">Sign the Book</h4>
@@ -229,43 +192,30 @@ const collapse = () => {
                                 <button type="submit" :disabled="isLoading"
                                     class="w-full relative overflow-hidden bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white font-semibold py-3.5 rounded-xl transition-all transform hover:scale-[1.02] hover:shadow-lg hover:shadow-purple-500/25 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed group">
                                     <span class="relative z-10 flex items-center justify-center gap-2">
-                                        <svg v-if="isLoading" class="w-5 h-5 animate-spin" fill="none"
-                                            viewBox="0 0 24 24">
-                                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
-                                                stroke-width="4"></circle>
-                                            <path class="opacity-75" fill="currentColor"
-                                                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
-                                            </path>
+                                        <svg v-if="isLoading" class="w-5 h-5 animate-spin" fill="none" viewBox="0 0 24 24">
+                                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                                         </svg>
                                         <span>{{ isLoading ? 'Sending...' : 'Send Message' }}</span>
-                                        <svg v-if="!isLoading" xmlns="http://www.w3.org/2000/svg"
-                                            class="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none"
-                                            viewBox="0 0 24 24" stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                                        <svg v-if="!isLoading" xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
                                         </svg>
                                     </span>
                                 </button>
 
                                 <!-- Success/Error Messages -->
                                 <transition name="fade">
-                                    <p v-if="successMessage"
-                                        class="flex items-center gap-2 text-sm text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 rounded-lg px-4 py-2">
+                                    <p v-if="successMessage" class="flex items-center gap-2 text-sm text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 rounded-lg px-4 py-2">
                                         <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                                            <path fill-rule="evenodd"
-                                                d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                                                clip-rule="evenodd" />
+                                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
                                         </svg>
                                         {{ successMessage }}
                                     </p>
                                 </transition>
                                 <transition name="fade">
-                                    <p v-if="error"
-                                        class="flex items-center gap-2 text-sm text-red-400 bg-red-500/10 border border-red-500/20 rounded-lg px-4 py-2">
+                                    <p v-if="error" class="flex items-center gap-2 text-sm text-red-400 bg-red-500/10 border border-red-500/20 rounded-lg px-4 py-2">
                                         <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                                            <path fill-rule="evenodd"
-                                                d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
-                                                clip-rule="evenodd" />
+                                            <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
                                         </svg>
                                         {{ error }}
                                     </p>
@@ -276,132 +226,59 @@ const collapse = () => {
                 </div>
 
                 <!-- Comments List Column -->
-                <div class="lg:col-span-3 order-1 lg:order-2" v-motion :initial="{ opacity: 0, x: 30 }"
-                    :visible="{ opacity: 1, x: 0, transition: { delay: 300 } }">
-
-                    <!-- Comments Header with Controls -->
-                    <div class="flex flex-wrap items-center justify-between gap-4 mb-6">
+                <div class="lg:col-span-3 order-1 lg:order-2" v-motion
+                    :initial="{ opacity: 0, x: 30 }" :visible="{ opacity: 1, x: 0, transition: { delay: 300 } }">
+                    
+                    <!-- Comments Header -->
+                    <div class="flex items-center justify-between mb-6">
                         <h4 class="text-lg font-semibold text-white flex items-center gap-2">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-purple-400" fill="none"
-                                viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-purple-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
                             </svg>
                             Messages
-                            <span
-                                class="inline-flex items-center justify-center min-w-[1.5rem] h-6 px-2 text-xs font-medium bg-purple-500/20 text-purple-300 rounded-full">
+                            <span class="inline-flex items-center justify-center min-w-[1.5rem] h-6 px-2 text-xs font-medium bg-purple-500/20 text-purple-300 rounded-full">
                                 {{ comments.length }}
                             </span>
                         </h4>
-
-                        <!-- View Toggle -->
-                        <div class="flex items-center gap-2" v-if="comments.length > 3">
-                            <button @click="isCompactView = false"
-                                :class="['p-2 rounded-lg transition-all', !isCompactView ? 'bg-purple-500/20 text-purple-300' : 'text-slate-500 hover:text-slate-300']"
-                                title="Normal View">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24"
-                                    stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M4 6h16M4 12h16M4 18h16" />
-                                </svg>
-                            </button>
-                            <button @click="isCompactView = true"
-                                :class="['p-2 rounded-lg transition-all', isCompactView ? 'bg-purple-500/20 text-purple-300' : 'text-slate-500 hover:text-slate-300']"
-                                title="Compact View">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24"
-                                    stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M4 6h16M4 10h16M4 14h16M4 18h16" />
-                                </svg>
-                            </button>
-                        </div>
                     </div>
 
-                    <!-- Comments List -->
-                    <div class="space-y-3 custom-scrollbar"
-                        :class="{ 'max-h-[700px] overflow-y-auto pr-2': comments.length > 8 }">
+                    <!-- Comments List with Scroll -->
+                    <div class="space-y-4 max-h-[550px] overflow-y-auto pr-2 custom-scrollbar">
                         <transition-group name="list">
-                            <div v-for="(comment, index) in displayedComments" :key="comment.id" :class="[
-                                'comment-card group bg-gradient-to-br from-slate-800/60 to-slate-900/60 backdrop-blur-lg border border-white/5 rounded-2xl hover:border-purple-500/30 hover:shadow-lg hover:shadow-purple-500/5 transition-all duration-300',
-                                isCompactView ? 'p-3' : 'p-5'
-                            ]" :style="{ animationDelay: `${index * 50}ms` }">
-
-                                <div class="flex gap-3" :class="{ 'gap-4': !isCompactView }">
+                            <div v-for="(comment, index) in comments" :key="comment.id"
+                                class="comment-card group bg-gradient-to-br from-slate-800/60 to-slate-900/60 backdrop-blur-lg border border-white/5 rounded-2xl p-5 hover:border-purple-500/30 hover:shadow-lg hover:shadow-purple-500/5 transition-all duration-300"
+                                :style="{ animationDelay: `${index * 50}ms` }">
+                                
+                                <div class="flex gap-4">
                                     <!-- Avatar -->
                                     <div class="flex-shrink-0">
-                                        <div :class="[
-                                            'bg-gradient-to-br flex items-center justify-center text-white font-bold shadow-lg',
-                                            isCompactView ? 'w-9 h-9 rounded-lg text-sm' : 'w-12 h-12 rounded-xl text-lg',
-                                            getAvatarColor(comment.name)
-                                        ]">
+                                        <div :class="['w-12 h-12 rounded-xl bg-gradient-to-br flex items-center justify-center text-white font-bold text-lg shadow-lg', getAvatarColor(comment.name)]">
                                             {{ getInitials(comment.name) }}
                                         </div>
                                     </div>
-
+                                    
                                     <!-- Content -->
                                     <div class="flex-1 min-w-0">
-                                        <div class="flex flex-wrap items-center gap-2"
-                                            :class="{ 'mb-1': !isCompactView, 'mb-0.5': isCompactView }">
-                                            <h5
-                                                :class="['font-semibold text-white truncate', isCompactView ? 'text-sm' : '']">
-                                                {{ comment.name }}</h5>
+                                        <div class="flex flex-wrap items-center gap-2 mb-2">
+                                            <h5 class="font-semibold text-white truncate">{{ comment.name }}</h5>
                                             <span class="text-xs text-slate-500 flex items-center gap-1">
-                                                <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3" fill="none"
-                                                    viewBox="0 0 24 24" stroke="currentColor">
-                                                    <path stroke-linecap="round" stroke-linejoin="round"
-                                                        stroke-width="2"
-                                                        d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                                <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                                                 </svg>
                                                 {{ formatDate(comment.created_at) }}
                                             </span>
                                         </div>
-                                        <p
-                                            :class="['text-slate-300 leading-relaxed', isCompactView ? 'text-xs line-clamp-2' : 'text-sm']">
-                                            {{ comment.message }}</p>
+                                        <p class="text-slate-300 text-sm leading-relaxed">{{ comment.message }}</p>
                                     </div>
                                 </div>
                             </div>
                         </transition-group>
 
-                        <!-- Load More / Show Less Controls -->
-                        <div v-if="comments.length > commentsPerPage"
-                            class="flex flex-wrap items-center justify-center gap-3 pt-4">
-                            <button v-if="hasMoreComments" @click="showMore"
-                                class="inline-flex items-center gap-2 px-5 py-2.5 bg-slate-800/80 hover:bg-slate-700/80 border border-white/10 hover:border-purple-500/30 text-slate-300 hover:text-white text-sm font-medium rounded-xl transition-all">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24"
-                                    stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M19 9l-7 7-7-7" />
-                                </svg>
-                                Show More
-                                <span class="px-2 py-0.5 bg-purple-500/20 text-purple-300 text-xs rounded-full">{{
-                                    remainingCount }}</span>
-                            </button>
-
-                            <button v-if="hasMoreComments" @click="showAll"
-                                class="inline-flex items-center gap-2 px-4 py-2.5 text-slate-400 hover:text-purple-300 text-sm font-medium transition-colors">
-                                Show All
-                            </button>
-
-                            <button v-if="displayCount > commentsPerPage" @click="collapse"
-                                class="inline-flex items-center gap-2 px-5 py-2.5 bg-slate-800/80 hover:bg-slate-700/80 border border-white/10 hover:border-purple-500/30 text-slate-300 hover:text-white text-sm font-medium rounded-xl transition-all">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24"
-                                    stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M5 15l7-7 7 7" />
-                                </svg>
-                                Show Less
-                            </button>
-                        </div>
-
                         <!-- Empty State -->
                         <div v-if="comments.length === 0" class="text-center py-16">
-                            <div
-                                class="w-20 h-20 mx-auto mb-6 rounded-2xl bg-gradient-to-br from-purple-500/20 to-pink-500/20 flex items-center justify-center">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="w-10 h-10 text-purple-400" fill="none"
-                                    viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
-                                        d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                            <div class="w-20 h-20 mx-auto mb-6 rounded-2xl bg-gradient-to-br from-purple-500/20 to-pink-500/20 flex items-center justify-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="w-10 h-10 text-purple-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
                                 </svg>
                             </div>
                             <h4 class="text-lg font-semibold text-white mb-2">No messages yet</h4>
@@ -433,14 +310,6 @@ const collapse = () => {
     background: linear-gradient(to bottom, rgba(139, 92, 246, 0.6), rgba(236, 72, 153, 0.6));
 }
 
-/* Line clamp for compact view */
-.line-clamp-2 {
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-}
-
 /* Animations */
 .fade-enter-active,
 .fade-leave-active {
@@ -465,7 +334,6 @@ const collapse = () => {
         opacity: 0;
         transform: translateY(-20px);
     }
-
     to {
         opacity: 1;
         transform: translateY(0);
@@ -477,7 +345,6 @@ const collapse = () => {
         opacity: 1;
         transform: translateY(0);
     }
-
     to {
         opacity: 0;
         transform: translateY(20px);
@@ -493,7 +360,6 @@ const collapse = () => {
         opacity: 0;
         transform: translateY(20px);
     }
-
     to {
         opacity: 1;
         transform: translateY(0);
